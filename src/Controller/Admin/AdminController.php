@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Event;
 use App\Form\EventFormType;
@@ -16,14 +16,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
-
-    #[Route('', name: 'admin_dashboard')]
+    #[Route('', name: 'app_admin_dashboard')]
     public function dashboard(EventRepository $eventRepository): Response
     {
-        $events = $eventRepository->findAll();
-
         return $this->render('admin/dashboard.html.twig', [
-            'events' => $events,
+            'events' => $eventRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/event/{id}', name: 'admin_event_show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function showEvent(Event $event): Response
+    {
+        return $this->render('admin/event\event_show.html.twig', [
+            'event' => $event,
         ]);
     }
 
@@ -31,24 +36,24 @@ class AdminController extends AbstractController
     public function newEvent(Request $request, EntityManagerInterface $em): Response
     {
         $event = new Event();
-        $form = $this->createForm(EventFormType::class, $event);
+        $form  = $this->createForm(EventFormType::class, $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($event);
             $em->flush();
-
             $this->addFlash('success', 'Événement créé avec succès !');
-            return $this->redirectToRoute('admin_dashboard');
+            return $this->redirectToRoute('app_admin_dashboard');
         }
 
-        return $this->render('admin/event_form.html.twig', [
-            'form' => $form,
+        return $this->render('admin/event/event_form.html.twig', [
+            'form'       => $form,
+            'event'      => $event,
             'titre_page' => 'Créer un événement',
         ]);
     }
 
-    #[Route('/event/{id}/edit', name: 'admin_event_edit')]
+    #[Route('/event/{id}/edit', name: 'admin_event_edit', requirements: ['id' => '\d+'])]
     public function editEvent(Event $event, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(EventFormType::class, $event);
@@ -56,21 +61,20 @@ class AdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-
             $this->addFlash('success', 'Événement modifié avec succès !');
-            return $this->redirectToRoute('admin_dashboard');
+            return $this->redirectToRoute('admin_event_show', ['id' => $event->getId()]);
         }
 
-        return $this->render('admin/event_form.html.twig', [
-            'form' => $form,
-            'titre_page' => 'Modifier un événement',
+        return $this->render('admin/event\event_form.html.twig', [
+            'form'       => $form,
+            'event'      => $event,
+            'titre_page' => 'Modifier l\'événement',
         ]);
     }
 
-    #[Route('/event/{id}/delete', name: 'admin_event_delete', methods: ['POST'])]
+    #[Route('/event/{id}/delete', name: 'admin_event_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function deleteEvent(Event $event, Request $request, EntityManagerInterface $em): Response
     {
-
         if ($this->isCsrfTokenValid('delete-event-' . $event->getId(), $request->request->get('_token'))) {
             $em->remove($event);
             $em->flush();
@@ -79,6 +83,6 @@ class AdminController extends AbstractController
             $this->addFlash('danger', 'Token invalide, suppression annulée.');
         }
 
-        return $this->redirectToRoute('admin_dashboard');
+        return $this->redirectToRoute('app_admin_dashboard');
     }
 }

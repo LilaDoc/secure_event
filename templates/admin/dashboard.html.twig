@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Admin — Événements
+{% endblock %}
+
+{% block body %}
+	<div
+		class="admin-wrap">
+
+		{# ── SIDEBAR ── #}
+		<aside class="sidebar">
+			<div class="sidebar-logo">
+				<span class="dot"></span>
+				Admin Panel
+			</div>
+			<nav class="sidebar-nav">
+				<div class="nav-label">Navigation</div>
+				<a href="{{ path('app_admin_dashboard') }}" class="nav-link active">
+					<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+					Dashboard
+				</a>
+
+				<div class="nav-label">Gestion</div>
+				<a href="#" class="nav-link">
+					<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+					Utilisateurs
+				</a>
+			</nav>
+			<div class="sidebar-footer">
+				Connecté :
+				<strong>{{ app.user.email }}</strong><br>
+				<a href="{{ path('app_logout') }}">Se déconnecter</a>
+			</div>
+		</aside>
+
+		{# ── MAIN ── #}
+		<main
+			style="flex:1;padding:28px;min-width:0;">
+
+			{# Flash messages #}
+			{% for msg in app.flashes('success') %}
+				<div class="flash flash-success">{{ msg }}</div>
+			{% endfor %}
+			{% for msg in app.flashes('danger') %}
+				<div class="flash flash-danger">{{ msg }}</div>
+			{% endfor %}
+
+			{# ── HEADER ── #}
+			<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+				<h1 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:0;">
+					Événements
+					<span style="font-size:0.9rem;color:var(--sec-text-muted);font-weight:400;letter-spacing:0;text-transform:none;margin-left:8px;">
+						({{ events|length }})
+					</span>
+				</h1>
+				<a href="{{ path('admin_event_new') }}" class="btn btn-success btn-sm">
+					+ Nouvel événement
+				</a>
+			</div>
+
+			{# ── TABLE ── #}
+			<div class="panel">
+				<div class="table-wrap">
+					{% if events is empty %}
+						<div class="empty-state">
+							<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+							<p>Aucun événement pour l'instant.</p>
+						</div>
+					{% else %}
+						<table class="table mb-0">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Titre</th>
+									<th>Date</th>
+									<th>Lieu</th>
+									<th>Capacité</th>
+									<th>Statut</th>
+									<th>Publication</th>
+									<th style="text-align:right;">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for event in events %}
+									<tr>
+										<td style="color:var(--sec-text-muted);font-size:.75rem;">{{ loop.index }}</td>
+										<td style="font-weight:500;">{{ event.titre }}</td>
+										<td style="color:var(--sec-text-muted);font-size:.78rem;white-space:nowrap;">{{ event.dateDebut|date("d/m/Y H:i") }}</td>
+										<td style="font-size:.82rem;">{{ event.lieu }}</td>
+										<td style="font-size:.82rem;">{{ event.capaciteMax }}
+											pl.</td>
+										<td>
+											{% if event.dateDebut > date() %}
+												<span class="badge badge-upcoming">À venir</span>
+											{% else %}
+												<span class="badge badge-past">Passé</span>
+											{% endif %}
+										</td>
+										<td>
+											{% if event.isPublished %}
+												<span class="badge badge-published">Publié</span>
+											{% else %}
+												<span class="badge badge-draft">Brouillon</span>
+											{% endif %}
+										</td>
+										<td>
+											<div class="actions" style="justify-content:flex-end;">
+												<a href="{{ path('admin_event_show', {'id': event.id}) }}" class="icon-btn" title="Voir">
+													<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+												</a>
+												<a href="{{ path('admin_event_edit', {'id': event.id}) }}" class="icon-btn" title="Modifier">
+													<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+												</a>
+												<form method="post" action="{{ path('admin_event_delete', {'id': event.id}) }}" onsubmit="return confirm('Supprimer « {{ event.titre }} » ?');" style="display:inline;">
+													<input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}">
+													<button type="submit" class="icon-btn del" title="Supprimer">
+														<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+				</div>
+			</div>
+
+		</main>
+	</div>
+{% endblock %}
