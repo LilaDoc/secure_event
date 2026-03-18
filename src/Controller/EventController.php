@@ -100,4 +100,13 @@ final class EventController extends AbstractController
         $this->addFlash('success', 'Inscription réussie !');
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
+    #[Route('/profil/mes-evenements', name: 'app_mes_evenements', methods: ['GET'])]
+    public function mesEvenements(EventRepository $eventRepository): Response
+    {
+        $user = $this->getUser();
+        return $this->render('user/event.html.twig', [
+            'events' => $eventRepository->findPublishedByUser($user)
+        ]);
+    }
+
 }

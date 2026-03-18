@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -24,6 +25,17 @@ class EventRepository extends ServiceEntityRepository
              return $this->createQueryBuilder('e')
                 ->andWhere('e.isPublished = :published')
                 ->setParameter('published', true)
+                ->orderBy('e.dateDebut', 'ASC')
+                ->getQuery()
+                ->getResult();
+            }
+         public function findPublishedByUser(User $user): array
+            {
+             return $this->createQueryBuilder('e')
+                ->andWhere('e.isPublished = :published')
+                ->andWhere(':user MEMBER OF e.Reservation')
+                ->setParameter('published', true)
+                ->setParameter('user', $user)
                 ->orderBy('e.dateDebut', 'ASC')
                 ->getQuery()
                 ->getResult();
