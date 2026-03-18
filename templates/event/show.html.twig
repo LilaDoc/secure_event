@@ -37,7 +37,20 @@
             </tr>
         </tbody>
     </table>
-
+    {% if app.user %}
+        {% if event.reservation.contains(app.user) %}
+            <p>✅ Vous êtes déjà inscrit</p>
+        {% elseif event.reservation|length == event.capaciteMax %}
+            <p>L'evenement est complet.</p>
+        {% else %}
+            <form method="post" action="{{ path('app_event_inscription', {id: event.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('inscription' ~ event.id) }}">
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <a href="{{ path('app_login') }}">Connectez-vous pour vous inscrire</a>
+    {% endif %}
     <a href="{{ path('app_event_index') }}">back to list</a>
 
     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,17 @@ class Event
 
     #[ORM\Column(length: 255)]
     private ?string $place = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'Reservation')]
+    private Collection $Reservation;
+
+    public function __construct()
+    {
+        $this->Reservation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +118,30 @@ class Event
     public function setPlace(string $place): static
     {
         $this->place = $place;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getReservation(): Collection
+    {
+        return $this->Reservation;
+    }
+
+    public function addReservation(User $reservation): static
+    {
+        if (!$this->Reservation->contains($reservation)) {
+            $this->Reservation->add($reservation);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(User $reservation): static
+    {
+        $this->Reservation->removeElement($reservation);
 
         return $this;
     }

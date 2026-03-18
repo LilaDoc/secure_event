@@ -21,12 +21,10 @@
         <tbody>
         {% for event in events %}
             <tr>
-                <td>{{ event.id }}</td>
                 <td>{{ event.titre }}</td>
                 <td>{{ event.description }}</td>
                 <td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ event.capaciteMax }}</td>
-                <td>{{ event.isPublished ? 'Yes' : 'No' }}</td>
                 <td>{{ event.place }}</td>
                 <td>
                     <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>

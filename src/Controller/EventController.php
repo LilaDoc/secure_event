@@ -18,7 +18,7 @@ final class EventController extends AbstractController
     public function index(EventRepository $eventRepository): Response
     {
         return $this->render('event/index.html.twig', [
-            'events' => $eventRepository->findAll(),
+            'events' => $eventRepository->findPublished()
         ]);
     }
 
@@ -45,6 +45,7 @@ final class EventController extends AbstractController
     #[Route('event/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
+
         return $this->render('event/show.html.twig', [
             'event' => $event,
         ]);
@@ -77,5 +78,26 @@ final class EventController extends AbstractController
         }
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/event/{id}/inscription', name: 'app_event_inscription', methods: ['POST'])]
+    public function inscription(Event $event, EntityManagerInterface $entityManager): Response
+    {  
+        $user = $this->getUser();
+
+    // Vérifie si l'user est déjà inscrit
+        if ($event->getReservation()->contains($user)) {
+        $this->addFlash('warning', 'Vous êtes déjà inscrit à cet événement.');
+        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        }
+        if ($event->getReservation()->count() >= $event->getCapaciteMax()) {
+            $this->addFlash('warning', 'Evenement complet');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        }
+
+        $event->addReservation($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Inscription réussie !');
+        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
 }
