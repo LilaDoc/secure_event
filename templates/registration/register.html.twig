@@ -1,19 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Créer un compte - SecurEvent
+{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card shadow-sm mt-5">
+				<div class="card-body p-4">
+					<h2 class="card-title mb-4">Créer un compte</h2>
 
-    {{ form_errors(registrationForm) }}
+					{{ form_start(registrationForm) }}
+					<div class="mb-3">
+						{{ form_label(registrationForm.prenom) }}
+						{{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(registrationForm.prenom) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(registrationForm.nom) }}
+						{{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(registrationForm.nom) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(registrationForm.email) }}
+						{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(registrationForm.email) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(registrationForm.plainPassword.first) }}
+						{{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(registrationForm.plainPassword.first) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(registrationForm.plainPassword.second) }}
+						{{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(registrationForm.plainPassword.second) }}
+					</div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+					<button type="submit" class="btn btn-primary w-100">Créer mon compte</button>
+					{{ form_end(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+					<hr>
+					<p class="text-center mb-0">
+						Déjà un compte ?
+						<a href="{{ path('app_login') }}">Se connecter</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
