@@ -9,18 +9,8 @@
 		<p class="lead text-muted mt-3">
 			La plateforme de référence pour les conférences et CTF en cybersécurité.
 		</p>
-
-		{% if not app.user %}
-			<div class="mt-4">
-				<a href="{{ path('app_register') }}" class="btn btn-primary btn-lg me-2">Créer un compte</a>
-				<a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-lg">Se connecter</a>
-			</div>
-		{% else %}
-			<div class="mt-4">
-				<p>Bonjour
-					<strong>{{ app.user.prenom }}</strong>, content de te revoir !</p>
-				<a href="{{ path('app_logout') }}" class="btn btn-outline-danger">Se déconnecter</a>
-			</div>
-		{% endif %}
+		<div class="mt-4">
+			<a href="{{ path('app_event_index') }}" class="btn btn-outline-danger">Accéder aux Events</a>
+		</div>
 	</div>
 {% endblock %}
