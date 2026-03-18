@@ -26,9 +26,11 @@ class EventFormType extends AbstractType
                 'attr'        => ['placeholder' => 'Ex: Concert de jazz'],
             ])
             ->add('description', TextareaType::class, [
-                'label'    => 'Description',
-                'required' => false,
-                'attr'     => [
+                'label'       => 'Description',
+                'constraints' => [
+                    new NotBlank(['message' => 'La description ne peut pas être vide.']),
+                ],
+                'attr' => [
                     'placeholder' => 'Décrivez l\'événement...',
                     'rows'        => 4,
                 ],

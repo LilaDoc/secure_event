@@ -3,11 +3,8 @@
 namespace App\Controller\Front;
 
 use App\Entity\Event;
-use App\Form\EventType;
 use App\Repository\EventRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -22,7 +19,7 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('event/{id}', name: 'app_event_show', methods: ['GET'])]
+    #[Route('/event/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
         return $this->render('event/show.html.twig', [
