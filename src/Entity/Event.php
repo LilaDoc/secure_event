@@ -30,7 +30,7 @@ class Event
     private ?bool $isPublished = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $place = null;
+    private ?string $lieu = null;
 
     public function getId(): ?int
     {
@@ -97,14 +97,14 @@ class Event
         return $this;
     }
 
-    public function getPlace(): ?string
+    public function getLieu(): ?string
     {
-        return $this->place;
+        return $this->lieu;
     }
 
-    public function setPlace(string $place): static
+    public function setLieu(string $lieu): static
     {
-        $this->place = $place;
+        $this->lieu = $lieu;
 
         return $this;
     }
