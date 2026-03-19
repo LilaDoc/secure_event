@@ -45,6 +45,33 @@ class Event
         $this->reservation = new ArrayCollection();
     }
 
+    /**
+     * Retourne le statut dynamique de l'événement selon l'heure actuelle.
+     * - "à venir"   : avant la date de début
+     * - "en cours"  : entre dateDebut et dateDebut + 2h30
+     * - "terminé"   : après dateDebut + 2h30
+     */
+    public function getStatut(): string
+    {
+        if ($this->dateDebut === null) {
+            return 'inconnu';
+        }
+
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $debut = $this->dateDebut->setTimezone(new \DateTimeZone('UTC'));
+        $fin = $debut->modify('+2 hours 30 minutes');
+
+        if ($now < $debut) {
+            return 'à venir';
+        }
+
+        if ($now >= $debut && $now <= $fin) {
+            return 'en cours';
+        }
+
+        return 'terminé';
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,8 +108,7 @@ class Event
 
     public function setDateDebut(\DateTimeImmutable $dateDebut): static
     {
-        $this->dateDebut = $dateDebut;
-
+        $this->dateDebut = $dateDebut->setTimezone(new \DateTimeZone('Europe/Paris'));
         return $this;
     }
 

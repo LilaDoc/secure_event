@@ -27,18 +27,21 @@ class EventRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
             ->where('e.isPublished = true')
             ->andWhere('e.dateDebut > :now')
-            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('now', new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))
             ->orderBy('e.dateDebut', 'ASC')
             ->getQuery()
             ->getResult();
     }
+
     public function findPublishedByUser(User $user): array
     {
-         return $this->createQueryBuilder('e')
+        return $this->createQueryBuilder('e')
             ->andWhere('e.isPublished = :published')
             ->andWhere(':user MEMBER OF e.reservation')
+            ->andWhere('e.dateDebut > :now')
             ->setParameter('published', true)
             ->setParameter('user', $user)
+            ->setParameter('now', new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris')))
             ->orderBy('e.dateDebut', 'ASC')
             ->getQuery()
             ->getResult();
