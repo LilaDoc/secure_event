@@ -36,9 +36,10 @@ class EventFormType extends AbstractType
                 ],
             ])
             ->add('dateDebut', DateTimeType::class, [
-                'label'       => 'Date et heure de début',
-                'widget'      => 'single_text',
-                'constraints' => [
+                'label'         => 'Date et heure de début',
+                'widget'        => 'single_text',
+                'view_timezone' => 'Europe/Paris',
+                'constraints'   => [
                     new NotBlank(['message' => 'La date est obligatoire.']),
                     new GreaterThan([
                         'value'   => 'today',

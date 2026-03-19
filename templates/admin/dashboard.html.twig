@@ -84,10 +84,13 @@
 										<td style="font-size:.82rem;">{{ event.capaciteMax }}
 											pl.</td>
 										<td>
-											{% if event.dateDebut > date() %}
+											{% set statut = event.statut %}
+											{% if statut == 'à venir' %}
 												<span class="badge badge-upcoming">À venir</span>
+											{% elseif statut == 'en cours' %}
+												<span class="badge badge-warning">En cours</span>
 											{% else %}
-												<span class="badge badge-past">Passé</span>
+												<span class="badge badge-past">Terminé</span>
 											{% endif %}
 										</td>
 										<td>
