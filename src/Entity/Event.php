@@ -34,8 +34,8 @@ class Event
 
     #[ORM\Column]
     private ?bool $isPublished = null;
+
     
-    #[Groups(['api_event_read'])]
     #[ORM\Column(length: 255)]
     private ?string $lieu = null;
 
