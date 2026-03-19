@@ -1,158 +1,162 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ titre_page }} — Admin{% endblock %}
+{% block title %}
+	{{ titre_page }}
+	— Admin
+{% endblock %}
 
 {% block body %}
-<div class="container-fluid px-0">
-    <div class="admin-wrap">
+	<div class="container-fluid px-0">
+		<div
+			class="admin-wrap">
 
-        {# ── SIDEBAR ── #}
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                <span class="dot"></span>
-                SecurEvent
-            </div>
-            <nav class="sidebar-nav">
-                <div class="nav-label">Navigation</div>
-                <a href="{{ path('app_admin_dashboard') }}" class="nav-link">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                    Dashboard
-                </a>
-                <a href="{{ path('app_event_index') }}" class="nav-link">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    Événements
-                </a>
-                <div class="nav-label">Gestion</div>
-                <a href="#" class="nav-link active">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    {{ titre_page }}
-                </a>
-            </nav>
-            <div class="sidebar-footer">
-                Connecté : <strong>{{ app.user.email }}</strong><br>
-                <a href="{{ path('app_logout') }}">Se déconnecter</a>
-            </div>
-        </aside>
+			{# ── SIDEBAR ── #}
+			<aside class="sidebar">
+				<div class="sidebar-logo">
+					<span class="dot"></span>
+					SecurEvent
+				</div>
+				<nav class="sidebar-nav">
+					<div class="nav-label">Navigation</div>
+					<a href="{{ path('app_admin_dashboard') }}" class="nav-link">
+						<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+						Dashboard
+					</a>
 
-        {# ── MAIN ── #}
-        <main style="flex:1;padding:28px;min-width:0;">
+					<div class="nav-label">Gestion</div>
+					<a href="#" class="nav-link active">
+						<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+						{{ titre_page }}
+					</a>
+				</nav>
+				<div class="sidebar-footer">
+					Connecté :
+					<strong>{{ app.user.email }}</strong><br>
+					<a href="{{ path('app_logout') }}">Se déconnecter</a>
+				</div>
+			</aside>
 
-            {# Breadcrumb #}
-            <nav style="font-size:0.75rem;color:var(--sec-text-muted);margin-bottom:20px;">
-                <a href="{{ path('app_admin_dashboard') }}" style="color:var(--sec-green);text-decoration:none;">Dashboard</a>
-                <span style="margin:0 8px;">›</span>
-                {% if event.id %}
-                    <a href="{{ path('admin_event_show', {'id': event.id}) }}" style="color:var(--sec-green);text-decoration:none;">{{ event.titre }}</a>
-                    <span style="margin:0 8px;">›</span>
-                    <span>Modifier</span>
-                {% else %}
-                    <span>Nouvel événement</span>
-                {% endif %}
-            </nav>
+			{# ── MAIN ── #}
+			<main
+				style="flex:1;padding:28px;min-width:0;">
 
-            {# Flash #}
-            {% for msg in app.flashes('success') %}
-                <div class="flash flash-success">{{ msg }}</div>
-            {% endfor %}
-            {% for msg in app.flashes('danger') %}
-                <div class="flash flash-danger">{{ msg }}</div>
-            {% endfor %}
+				{# Breadcrumb #}
+				<nav style="font-size:0.75rem;color:var(--sec-text-muted);margin-bottom:20px;">
+					<a href="{{ path('app_admin_dashboard') }}" style="color:var(--sec-green);text-decoration:none;">Dashboard</a>
+					<span style="margin:0 8px;">›</span>
+					{% if event.id %}
+						<a href="{{ path('admin_event_show', {'id': event.id}) }}" style="color:var(--sec-green);text-decoration:none;">{{ event.titre }}</a>
+						<span style="margin:0 8px;">›</span>
+						<span>Modifier</span>
+					{% else %}
+						<span>Nouvel événement</span>
+					{% endif %}
+				</nav>
 
-            {# ── FORM PANEL ── #}
-            <div class="panel">
-                <div class="panel-header">
-                    <span class="panel-title">{{ titre_page }}</span>
-                    {% if event.id %}
-                        <span style="font-size:0.72rem;color:var(--sec-text-muted);">ID #{{ event.id }}</span>
-                    {% endif %}
-                </div>
+				{# Flash #}
+				{% for msg in app.flashes('success') %}
+					<div class="flash flash-success">{{ msg }}</div>
+				{% endfor %}
+				{% for msg in app.flashes('danger') %}
+					<div class="flash flash-danger">{{ msg }}</div>
+				{% endfor %}
 
-                <div class="event-form">
-                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+				{# ── FORM PANEL ── #}
+				<div class="panel">
+					<div class="panel-header">
+						<span class="panel-title">{{ titre_page }}</span>
+						{% if event.id %}
+							<span style="font-size:0.72rem;color:var(--sec-text-muted);">ID #{{ event.id }}</span>
+						{% endif %}
+					</div>
 
-                    <div class="form-grid">
+					<div class="event-form">
+						{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-                        <div class="form-group">
-                            {{ form_label(form.titre, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Ex: CTF Paris 2025'}}) }}
-                            {{ form_errors(form.titre) }}
-                        </div>
+						<div class="form-grid">
 
-                        <div class="form-group">
-                            {{ form_label(form.dateDebut, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(form.dateDebut) }}
-                        </div>
+							<div class="form-group">
+								{{ form_label(form.titre, null, {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Ex: CTF Paris 2025'}}) }}
+								{{ form_errors(form.titre) }}
+							</div>
 
-                        <div class="form-group">
-                            {{ form_label(form.lieu, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.lieu, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Palais des Congrès, Paris'}}) }}
-                            {{ form_errors(form.lieu) }}
-                        </div>
+							<div class="form-group">
+								{{ form_label(form.dateDebut, null, {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+								{{ form_errors(form.dateDebut) }}
+							</div>
 
-                        <div class="form-group">
-                            {{ form_label(form.capaciteMax, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.capaciteMax, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 200', 'min': 1}}) }}
-                            {{ form_errors(form.capaciteMax) }}
-                        </div>
+							<div class="form-group">
+								{{ form_label(form.lieu, null, {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.lieu, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Palais des Congrès, Paris'}}) }}
+								{{ form_errors(form.lieu) }}
+							</div>
 
-                        <div class="form-group full">
-                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez le programme, les intervenants...', 'rows': 5}}) }}
-                            {{ form_errors(form.description) }}
-                        </div>
+							<div class="form-group">
+								{{ form_label(form.capaciteMax, null, {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.capaciteMax, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 200', 'min': 1}}) }}
+								{{ form_errors(form.capaciteMax) }}
+							</div>
 
-                        <div class="form-group full">
-                            <div class="form-check" style="display:flex;align-items:center;gap:10px;">
-                                {{ form_widget(form.isPublished, {'attr': {'class': 'form-check-input'}}) }}
-                                {{ form_label(form.isPublished, null, {'label_attr': {'class': 'form-check-label', 'style': 'font-size:0.85rem;text-transform:none;letter-spacing:0;color:var(--sec-text);'}}) }}
-                            </div>
-                            {{ form_errors(form.isPublished) }}
-                        </div>
+							<div class="form-group full">
+								{{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez le programme, les intervenants...', 'rows': 5}}) }}
+								{{ form_errors(form.description) }}
+							</div>
 
-                    </div>
+							<div class="form-group full">
+								<div class="form-check" style="display:flex;align-items:center;gap:10px;">
+									{{ form_widget(form.isPublished, {'attr': {'class': 'form-check-input'}}) }}
+									{{ form_label(form.isPublished, null, {'label_attr': {'class': 'form-check-label', 'style': 'font-size:0.85rem;text-transform:none;letter-spacing:0;color:var(--sec-text);'}}) }}
+								</div>
+								{{ form_errors(form.isPublished) }}
+							</div>
 
-                    <div class="form-footer">
-                        {% if event.id %}
-                            <a href="{{ path('admin_event_show', {'id': event.id}) }}" class="btn btn-sm" style="border:1px solid var(--sec-border);color:var(--sec-text-muted);">
-                                Annuler
-                            </a>
-                        {% else %}
-                            <a href="{{ path('app_admin_dashboard') }}" class="btn btn-sm" style="border:1px solid var(--sec-border);color:var(--sec-text-muted);">
-                                Annuler
-                            </a>
-                        {% endif %}
-                        <button type="submit" class="btn btn-success btn-sm">
-                            {% if event.id %}✓ Enregistrer les modifications{% else %}+ Créer l'événement{% endif %}
-                        </button>
-                    </div>
+						</div>
 
-                    {{ form_end(form) }}
-                </div>
-            </div>
+						<div class="form-footer">
+							{% if event.id %}
+								<a href="{{ path('admin_event_show', {'id': event.id}) }}" class="btn btn-sm" style="border:1px solid var(--sec-border);color:var(--sec-text-muted);">
+									Annuler
+								</a>
+							{% else %}
+								<a href="{{ path('app_admin_dashboard') }}" class="btn btn-sm" style="border:1px solid var(--sec-border);color:var(--sec-text-muted);">
+									Annuler
+								</a>
+							{% endif %}
+							<button type="submit" class="btn btn-success btn-sm">
+								{% if event.id %}✓ Enregistrer les modifications{% else %}+ Créer l'événement
+								{% endif %}
+							</button>
+						</div>
 
-            {# ── ZONE DANGEREUSE (edit seulement) ── #}
-            {% if event.id %}
-            <div class="panel" style="border-color:rgba(220,38,38,.2);">
-                <div class="panel-header" style="background:rgba(220,38,38,.04);">
-                    <span class="panel-title" style="color:var(--sec-danger);">Zone dangereuse</span>
-                </div>
-                <div style="padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-                    <div>
-                        <p style="font-size:0.82rem;font-weight:500;margin-bottom:4px;">Supprimer cet événement</p>
-                        <p style="font-size:0.75rem;color:var(--sec-text-muted);margin:0;">Cette action est irréversible. Toutes les données associées seront perdues.</p>
-                    </div>
-                    <form method="post" action="{{ path('admin_event_delete', {'id': event.id}) }}" onsubmit="return confirm('Supprimer définitivement « {{ event.titre }} » ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}">
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                            🗑 Supprimer définitivement
-                        </button>
-                    </form>
-                </div>
-            </div>
-            {% endif %}
+						{{ form_end(form) }}
+					</div>
+				</div>
 
-        </main>
-    </div>
-</div>
+				{# ── ZONE DANGEREUSE (edit seulement) ── #}
+				{% if event.id %}
+					<div class="panel" style="border-color:rgba(220,38,38,.2);">
+						<div class="panel-header" style="background:rgba(220,38,38,.04);">
+							<span class="panel-title" style="color:var(--sec-danger);">Zone dangereuse</span>
+						</div>
+						<div style="padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+							<div>
+								<p style="font-size:0.82rem;font-weight:500;margin-bottom:4px;">Supprimer cet événement</p>
+								<p style="font-size:0.75rem;color:var(--sec-text-muted);margin:0;">Cette action est irréversible. Toutes les données associées seront perdues.</p>
+							</div>
+							<form method="post" action="{{ path('admin_event_delete', {'id': event.id}) }}" onsubmit="return confirm('Supprimer définitivement « {{ event.titre }} » ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}">
+								<button type="submit" class="btn btn-outline-danger btn-sm">
+									🗑 Supprimer définitivement
+								</button>
+							</form>
+						</div>
+					</div>
+				{% endif %}
+
+			</main>
+		</div>
+	</div>
 {% endblock %}
