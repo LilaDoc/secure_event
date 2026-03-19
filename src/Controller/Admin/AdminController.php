@@ -85,4 +85,12 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('app_admin_dashboard');
     }
+    #[Route('admin/event/{id}/participants', name: 'admin_event_participants', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function showEventParticipants(Event $event): Response
+    {
+        return $this->render('admin/event/admin_event_paticipants.html.twig', [
+            'event' => $event,
+            'participants' => $event->getReservation(),
+        ]);
+    }
 }
