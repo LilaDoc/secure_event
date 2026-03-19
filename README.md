@@ -100,6 +100,7 @@ php bin/console doctrine:migrations:migrate
 ### 5. Charger les fixtures _(compte admin + données de test)_
 
 ```bash
+composer require --dev doctrine/doctrine-fixtures-bundle
 php bin/console doctrine:fixtures:load
 ```
 
