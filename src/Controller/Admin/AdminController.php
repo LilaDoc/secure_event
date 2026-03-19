@@ -80,7 +80,7 @@ class AdminController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Événement supprimé.');
         } else {
-            $this->addFlash('danger', 'Token invalide, suppression annulée.');
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
         return $this->redirectToRoute('app_admin_dashboard');

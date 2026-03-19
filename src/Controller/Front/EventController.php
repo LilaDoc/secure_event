@@ -7,6 +7,7 @@ use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 //#[Route('/event')]
@@ -29,14 +30,17 @@ final class EventController extends AbstractController
     }
 
     #[Route('/event/{id}/inscription', name: 'app_event_inscription', methods: ['POST'])]
-    public function inscription(Event $event, EntityManagerInterface $entityManager): Response
-    {  
+    public function inscription(Event $event, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('inscription' . $event->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
         $user = $this->getUser();
 
-    // Vérifie si l'user est déjà inscrit
         if ($event->getReservation()->contains($user)) {
-        $this->addFlash('warning', 'Vous êtes déjà inscrit à cet événement.');
-        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+            $this->addFlash('warning', 'Vous êtes déjà inscrit à cet événement.');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         }
         if ($event->getReservation()->count() >= $event->getCapaciteMax()) {
             $this->addFlash('warning', 'Evenement complet');
@@ -48,13 +52,5 @@ final class EventController extends AbstractController
 
         $this->addFlash('success', 'Inscription réussie !');
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
-    }
-    #[Route('/profil/mes-evenements', name: 'app_mes_evenements', methods: ['GET'])]
-    public function mesEvenements(EventRepository $eventRepository): Response
-    {
-        $user = $this->getUser();
-        return $this->render('user/event.html.twig', [
-            'events' => $eventRepository->findPublishedByUser($user)
-        ]);
     }
 }
