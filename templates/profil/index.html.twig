@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes événements — SecurEvent
+{% block title %}Mon espace — SecurEvent
 {% endblock %}
 
 {% block body %}
@@ -9,13 +9,32 @@
 		<div
 			class="container">
 
-			{# HEADER #}
-			<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-5">
+			{# INFOS UTILISATEUR #}
+			<div class="events-wrapper" style="margin-bottom: 2rem;">
+				<div style="padding: 1.5rem 1.75rem;">
+					<span class="section-label" style="margin-bottom: 0.75rem;">Mon compte</span>
+					<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+						<div style="display:flex; flex-direction:column; gap:0.5rem;">
+							<p style="font-size:0.88rem; color:#64748b; font-family:'JetBrains Mono',monospace; margin:0;">
+								<span style="color:#f0f6ff; font-weight:600;">{{ app.user.prenom }}
+									{{ app.user.nom }}</span>
+							</p>
+							<p style="font-size:0.82rem; color:#64748b; font-family:'JetBrains Mono',monospace; margin:0;">
+								{{ app.user.email }}
+							</p>
+						</div>
+						<a href="{{ path('app_profil_edit') }}" class="btn-view" style="font-size:0.8rem; padding:0.4rem 1rem;">
+							✏️ Modifier mon profil
+						</a>
+					</div>
+				</div>
+			</div>
+
+			{# HEADER ÉVÉNEMENTS #}
+			<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4">
 				<div>
 					<span class="section-label">Mon espace</span>
-					<h1 class="section-title" style="margin-bottom: 0.5rem;">
-						Mes événements
-					</h1>
+					<h1 class="section-title" style="margin-bottom: 0.5rem;">Mes événements</h1>
 					<p class="section-subtitle" style="margin: 0;">
 						Les événements auxquels vous êtes inscrit(e).
 					</p>
@@ -25,14 +44,14 @@
 				</a>
 			</div>
 
-			{# TABLE CARD #}
+			{# TABLE ÉVÉNEMENTS #}
 			<div class="events-wrapper">
 
 				{% if events is empty %}
 
 					<div style="text-align:center; padding: 4rem 1rem;">
 						<div style="font-size: 2.5rem; margin-bottom: 1rem;">📭</div>
-						<p style="color: var(--muted); font-family: var(--mono); font-size: 0.85rem; margin-bottom: 1.5rem;">
+						<p style="color:#64748b; font-family:'JetBrains Mono',monospace; font-size: 0.85rem; margin-bottom: 1.5rem;">
 							Vous n'êtes inscrit(e) à aucun événement pour le moment.
 						</p>
 						<a href="{{ path('app_home') }}" class="btn-cta" style="font-size:0.88rem; padding: 0.7rem 1.8rem;">
@@ -57,30 +76,25 @@
 							{% for event in events %}
 								<tr>
 									<td>
-										<strong style="color: var(--text); font-size: 0.9rem;">
+										<strong style="color:#f0f6ff; font-size:0.9rem;">
 											{{ event.titre }}
 										</strong>
 									</td>
-									<td class="d-none d-md-table-cell" style="color: var(--muted); max-width: 240px; font-size: 0.85rem;">
+									<td class="d-none d-md-table-cell" style="color:#64748b; max-width:240px; font-size:0.85rem;">
 										{{ event.description|length > 70 ? event.description|slice(0, 70) ~ '…' : event.description }}
 									</td>
-									<td style="white-space: nowrap;">
-										<span style="font-family: var(--mono); font-size: 0.78rem; color: var(--muted);">
+									<td style="white-space:nowrap;">
+										<span style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:#64748b;">
 											{{ event.dateDebut ? event.dateDebut|date('d/m/Y') : '—' }}
 										</span>
+										<br>
 										{% if event.dateDebut and event.dateDebut > date() %}
-											<br>
-											<span style="font-size: 0.68rem; color: var(--green); font-family: var(--mono);">
-												À venir
-											</span>
+											<span style="font-size:0.68rem; color:#4ade80; font-family:'JetBrains Mono',monospace;">À venir</span>
 										{% else %}
-											<br>
-											<span style="font-size: 0.68rem; color: var(--muted); font-family: var(--mono);">
-												Passé
-											</span>
+											<span style="font-size:0.68rem; color:#64748b; font-family:'JetBrains Mono',monospace;">Passé</span>
 										{% endif %}
 									</td>
-									<td class="d-none d-sm-table-cell" style="color: var(--muted); font-size: 0.85rem;">
+									<td class="d-none d-sm-table-cell" style="color:#64748b; font-size:0.85rem;">
 										{{ event.lieu }}
 									</td>
 									<td class="d-none d-sm-table-cell">
@@ -98,6 +112,7 @@
 					</table>
 
 				{% endif %}
+
 			</div>
 
 		</div>

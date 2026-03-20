@@ -1,46 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion - SecurEvent
+{% block title %}Connexion — SecurEvent
 {% endblock %}
 
 {% block body %}
-	<div class="row justify-content-center">
-		<div class="col-md-5">
-			<div class="card shadow-sm mt-5">
-				<div class="card-body p-4">
-					<h2 class="card-title mb-4">Connexion</h2>
 
+	<section style="min-height: 80vh; display:flex; align-items:center; padding: 3rem 0;">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div
+					class="col-md-4">
+
+					{# HEADER #}
+					<div style="text-align:center; margin-bottom:2rem;">
+						<span class="section-label" style="justify-content:center; display:block;">Bienvenue</span>
+						<h1 style="font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; color:#f0f6ff; margin-bottom:0.5rem;">
+							Connexion
+						</h1>
+						<p style="font-size:0.88rem; color:#64748b;">
+							Accédez à votre espace SecurEvent.
+						</p>
+					</div>
+
+					{# ERROR #}
 					{% if error %}
-						<div
-							class="alert alert-danger">
-							{# Message générique pour éviter l'user enumeration #}
+						<div class="alert alert-danger" style="margin-bottom:1.25rem;">
 							Identifiants invalides.
 						</div>
 					{% endif %}
 
-					<form method="post">
-						<div class="mb-3">
-							<label for="inputEmail" class="form-label">Email</label>
-							<input type="email" id="inputEmail" name="email" class="form-control" value="{{ last_username }}" autocomplete="email" required>
+					{# FORM CARD #}
+					<div class="events-wrapper">
+						<div style="padding:1.75rem;">
+
+							<form method="post">
+
+								<div style="display:flex; flex-direction:column; gap:1.1rem;">
+
+									<div>
+										<label for="inputEmail" style="display:block; font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; margin-bottom:0.4rem;">
+											Email
+										</label>
+										<input type="email" id="inputEmail" name="email" class="form-control" value="{{ last_username }}" autocomplete="email" placeholder="votre@email.com" required>
+									</div>
+
+									<div>
+										<label for="inputPassword" style="display:block; font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; margin-bottom:0.4rem;">
+											Mot de passe
+										</label>
+										<input type="password" id="inputPassword" name="password" class="form-control" autocomplete="current-password" placeholder="••••••••" required>
+									</div>
+
+								</div>
+
+								<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+								<button type="submit" class="btn-cta" style="width:100%; text-align:center; margin-top:1.5rem; padding:0.8rem; font-size:0.95rem; border:none; cursor:pointer;">
+									Se connecter
+								</button>
+
+							</form>
+
+							<div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid rgba(255,255,255,0.06); text-align:center;">
+								<p style="font-size:0.85rem; color:#64748b; margin:0;">
+									Pas encore de compte ?
+									<a href="{{ path('app_register') }}" style="color:#22d3ee; font-weight:500;">S'inscrire</a>
+								</p>
+							</div>
+
 						</div>
-						<div class="mb-3">
-							<label for="inputPassword" class="form-label">Mot de passe</label>
-							<input type="password" id="inputPassword" name="password" class="form-control" autocomplete="current-password" required>
-						</div>
+					</div>
 
-						{# Token CSRF généré par Symfony #}
-						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-						<button type="submit" class="btn btn-primary w-100">Se connecter</button>
-					</form>
-
-					<hr>
-					<p class="text-center mb-0">
-						Pas encore de compte ?
-						<a href="{{ path('app_register') }}">S'inscrire</a>
-					</p>
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
+
 {% endblock %}
