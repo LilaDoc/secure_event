@@ -15,7 +15,9 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['api_event_read'])]
     private ?int $id = null;
+
     #[Groups(['api_event_read'])]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
@@ -28,14 +30,14 @@ class Event
     #[ORM\Column]
     private ?\DateTimeImmutable $dateDebut = null;
 
-
+    #[Groups(['api_event_read'])]
     #[ORM\Column]
     private ?int $capaciteMax = null;
 
     #[ORM\Column]
-    private ?bool $isPublished = null;
+    private ?bool $isPublished = null;  // pas exposé = normal
 
-
+    #[Groups(['api_event_read'])]
     #[ORM\Column(length: 255)]
     private ?string $lieu = null;
 

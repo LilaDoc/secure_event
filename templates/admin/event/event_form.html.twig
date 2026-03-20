@@ -22,7 +22,6 @@
 						<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
 						Dashboard
 					</a>
-
 					<div class="nav-label">Gestion</div>
 					<a href="#" class="nav-link active">
 						<svg fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -30,7 +29,7 @@
 					</a>
 				</nav>
 				<div class="sidebar-footer">
-					Connecté :
+					Connecté :<br>
 					<strong>{{ app.user.email }}</strong><br>
 					<a href="{{ path('app_logout') }}">Se déconnecter</a>
 				</div>
@@ -38,15 +37,15 @@
 
 			{# ── MAIN ── #}
 			<main
-				style="flex:1;padding:28px;min-width:0;">
+				class="admin-main">
 
 				{# Breadcrumb #}
-				<nav style="font-size:0.75rem;color:var(--sec-text-muted);margin-bottom:20px;">
-					<a href="{{ path('app_admin_dashboard') }}" style="color:var(--sec-green);text-decoration:none;">Dashboard</a>
-					<span style="margin:0 8px;">›</span>
+				<nav style="font-size:0.75rem; color:#64748b; margin-bottom:20px; font-family:'JetBrains Mono',monospace;">
+					<a href="{{ path('app_admin_dashboard') }}" style="color:#22d3ee; text-decoration:none;">Dashboard</a>
+					<span style="margin:0 8px; color:#64748b;">›</span>
 					{% if event.id %}
-						<a href="{{ path('admin_event_show', {'id': event.id}) }}" style="color:var(--sec-green);text-decoration:none;">{{ event.titre }}</a>
-						<span style="margin:0 8px;">›</span>
+						<a href="{{ path('admin_event_show', {'id': event.id}) }}" style="color:#22d3ee; text-decoration:none;">{{ event.titre }}</a>
+						<span style="margin:0 8px; color:#64748b;">›</span>
 						<span>Modifier</span>
 					{% else %}
 						<span>Nouvel événement</span>
@@ -66,11 +65,11 @@
 					<div class="panel-header">
 						<span class="panel-title">{{ titre_page }}</span>
 						{% if event.id %}
-							<span style="font-size:0.72rem;color:var(--sec-text-muted);">ID #{{ event.id }}</span>
+							<span style="font-size:0.72rem; color:#64748b; font-family:'JetBrains Mono',monospace;">ID #{{ event.id }}</span>
 						{% endif %}
 					</div>
 
-					<div class="event-form">
+					<div style="padding:1.75rem;">
 						{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
 						<div class="form-grid">
@@ -106,24 +105,20 @@
 							</div>
 
 							<div class="form-group full">
-								<div class="form-check" style="display:flex;align-items:center;gap:10px;">
+								<div style="display:flex; align-items:center; gap:10px;">
 									{{ form_widget(form.isPublished, {'attr': {'class': 'form-check-input'}}) }}
-									{{ form_label(form.isPublished, null, {'label_attr': {'class': 'form-check-label', 'style': 'font-size:0.85rem;text-transform:none;letter-spacing:0;color:var(--sec-text);'}}) }}
+									{{ form_label(form.isPublished, null, {'label_attr': {'class': 'form-check-label', 'style': 'font-size:0.85rem; color:#f0f6ff; margin:0;'}}) }}
 								</div>
 								{{ form_errors(form.isPublished) }}
 							</div>
 
 						</div>
 
-						<div class="form-footer">
+						<div style="display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid rgba(255,255,255,0.06);">
 							{% if event.id %}
-								<a href="{{ path('admin_event_show', {'id': event.id}) }}" class="btn btn-sm" style="border:1px solid var(--sec-border);color:var(--sec-text-muted);">
-									Annuler
-								</a>
+								<a href="{{ path('admin_event_show', {'id': event.id}) }}" class="btn btn-sm" style="border:1px solid rgba(255,255,255,0.1); color:#64748b; background:transparent;">Annuler</a>
 							{% else %}
-								<a href="{{ path('app_admin_dashboard') }}" class="btn btn-sm" style="border:1px solid var(--sec-border);color:var(--sec-text-muted);">
-									Annuler
-								</a>
+								<a href="{{ path('app_admin_dashboard') }}" class="btn btn-sm" style="border:1px solid rgba(255,255,255,0.1); color:#64748b; background:transparent;">Annuler</a>
 							{% endif %}
 							<button type="submit" class="btn btn-success btn-sm">
 								{% if event.id %}✓ Enregistrer les modifications{% else %}+ Créer l'événement
@@ -135,20 +130,20 @@
 					</div>
 				</div>
 
-				{# ── ZONE DANGEREUSE (edit seulement) ── #}
+				{# ── ZONE DANGEREUSE ── #}
 				{% if event.id %}
-					<div class="panel" style="border-color:rgba(220,38,38,.2);">
-						<div class="panel-header" style="background:rgba(220,38,38,.04);">
-							<span class="panel-title" style="color:var(--sec-danger);">Zone dangereuse</span>
+					<div class="panel" style="margin-top:1.5rem; border-color:rgba(220,38,38,0.2);">
+						<div class="panel-header" style="background:rgba(220,38,38,0.04);">
+							<span class="panel-title" style="color:#f87171;">Zone dangereuse</span>
 						</div>
-						<div style="padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+						<div style="padding:1.25rem 1.75rem; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
 							<div>
-								<p style="font-size:0.82rem;font-weight:500;margin-bottom:4px;">Supprimer cet événement</p>
-								<p style="font-size:0.75rem;color:var(--sec-text-muted);margin:0;">Cette action est irréversible. Toutes les données associées seront perdues.</p>
+								<p style="font-size:0.85rem; font-weight:500; margin-bottom:4px; color:#f0f6ff;">Supprimer cet événement</p>
+								<p style="font-size:0.75rem; color:#64748b; margin:0;">Cette action est irréversible. Toutes les données associées seront perdues.</p>
 							</div>
 							<form method="post" action="{{ path('admin_event_delete', {'id': event.id}) }}" onsubmit="return confirm('Supprimer définitivement « {{ event.titre }} » ?');">
 								<input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}">
-								<button type="submit" class="btn btn-outline-danger btn-sm">
+								<button type="submit" class="btn btn-sm" style="background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.3); color:#f87171;">
 									🗑 Supprimer définitivement
 								</button>
 							</form>

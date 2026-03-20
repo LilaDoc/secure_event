@@ -1,53 +1,157 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event
+{% block title %}
+	{{ event.titre }}
+	— SecurEvent
 {% endblock %}
 
 {% block body %}
-	<h1>Event</h1>
 
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ event.id }}</td>
-			</tr>
-			<tr>
-				<th>Titre</th>
-				<td>{{ event.titre }}</td>
-			</tr>
-			<tr>
-				<th>Description</th>
-				<td>{{ event.description }}</td>
-			</tr>
-			<tr>
-				<th>DateDebut</th>
-				<td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>CapaciteMax</th>
-				<td>{{ event.capaciteMax }}</td>
-			</tr>
-			<tr>
-				<th>IsPublished</th>
-				<td>{{ event.isPublished ? 'Yes' : 'No' }}</td>
-			</tr>
-			<tr>
-				<th>Place</th>
-				<td>{{ event.lieu }}</td>
-			</tr>
-		</tbody>
-	</table>
-	        {% if event.reservation.contains(app.user) %}
-            <p>✅ Vous êtes déjà inscrit</p>
-        {% elseif event.reservation|length == event.capaciteMax %}
-            <p>L'evenement est complet.</p>
-        {% else %}
-            <form method="post" action="{{ path('app_event_inscription', {id: event.id}) }}">
-                <input type="hidden" name="_token" value="{{ csrf_token('inscription' ~ event.id) }}">
-                <button type="submit" class="btn btn-primary">S'inscrire</button>
-            </form>
-        {% endif %}
-	<a href="{{ path('app_event_index') }}">back to list</a>
+	<section class="section" style="padding-top: 3rem;">
+		<div
+			class="container">
+
+			{# BACK #}
+			<a href="{{ path('app_event_index') }}" style="font-family:var(--mono); font-size:0.78rem; color:var(--muted); text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-bottom:2rem; transition:color 0.15s;">
+				← Retour aux événements
+			</a>
+
+			<div
+				class="row g-4">
+
+				{# LEFT — Infos principales #}
+				<div class="col-lg-8">
+					<div
+						class="events-wrapper" style="margin-top:0;">
+
+						{# Header #}
+						<div style="padding: 1.75rem 1.75rem 1.25rem;">
+							<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:0.75rem;">
+								<span class="event-tag">{{ event.dateDebut ? event.dateDebut|date('d/m/Y') : '—' }}</span>
+								{% if event.reservation|length >= event.capaciteMax %}
+									<span class="event-tag" style="background:rgba(248,113,113,0.1); color:var(--red); border-color:rgba(248,113,113,0.2);">Complet</span>
+								{% else %}
+									<span class="event-tag" style="background:rgba(74,222,128,0.1); color:var(--green); border-color:rgba(74,222,128,0.2);">
+										{{ event.capaciteMax - event.reservation|length }}
+										place{{ (event.capaciteMax - event.reservation|length) > 1 ? 's' : '' }}
+										restante{{ (event.capaciteMax - event.reservation|length) > 1 ? 's' : '' }}
+									</span>
+								{% endif %}
+							</div>
+
+							<h1 style="font-family:var(--display); font-size:clamp(1.6rem, 3vw, 2.2rem); font-weight:700; color:var(--text); margin-bottom:0.5rem; line-height:1.2;">
+								{{ event.titre }}
+							</h1>
+
+							<p style="font-family:var(--mono); font-size:0.8rem; color:var(--muted);">
+								📍
+								{{ event.lieu }}
+							</p>
+						</div>
+
+						{# Separator #}
+						<div style="height:1px; background:rgba(255,255,255,0.06);"></div>
+
+						{# Description #}
+						<div style="padding:1.75rem;">
+							<span class="section-label" style="margin-bottom:0.75rem;">À propos</span>
+							<p style="font-size:0.95rem; color:rgba(240,246,255,0.85); line-height:1.8;">
+								{{ event.description|nl2br }}
+							</p>
+						</div>
+
+					</div>
+				</div>
+
+				{# RIGHT — Inscription #}
+				<div
+					class="col-lg-4">
+
+					{# Infos card #}
+					<div class="events-wrapper" style="margin-top:0; margin-bottom:1.25rem;">
+						<div style="padding:1.25rem 1.5rem;">
+							<span class="section-label" style="margin-bottom:1rem;">Détails</span>
+
+							<div style="display:flex; flex-direction:column; gap:0.85rem;">
+								<div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:0.75rem; border-bottom:1px solid rgba(255,255,255,0.05);">
+									<span style="font-family:var(--mono); font-size:0.7rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase;">Date</span>
+									<span style="font-size:0.85rem; color:var(--text); font-weight:500;">
+										{{ event.dateDebut ? event.dateDebut|date('d/m/Y à H:i') : '—' }}
+									</span>
+								</div>
+								<div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:0.75rem; border-bottom:1px solid rgba(255,255,255,0.05);">
+									<span style="font-family:var(--mono); font-size:0.7rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase;">Lieu</span>
+									<span style="font-size:0.85rem; color:var(--text); font-weight:500; text-align:right; max-width:60%;">{{ event.lieu }}</span>
+								</div>
+								<div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:0.75rem; border-bottom:1px solid rgba(255,255,255,0.05);">
+									<span style="font-family:var(--mono); font-size:0.7rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase;">Capacité</span>
+									<span style="font-size:0.85rem; color:var(--text); font-weight:500;">{{ event.capaciteMax }}
+										places</span>
+								</div>
+								<div style="display:flex; justify-content:space-between; align-items:center;">
+									<span style="font-family:var(--mono); font-size:0.7rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase;">Inscrits</span>
+									<span style="font-size:0.85rem; font-weight:500; color:{% if event.reservation|length >= event.capaciteMax %}var(--red){% else %}var(--green){% endif %};">
+										{{ event.reservation|length }}
+										/
+										{{ event.capaciteMax }}
+									</span>
+								</div>
+							</div>
+
+							{# Progress bar #}
+							{% set pct = event.capaciteMax > 0 ? (event.reservation|length / event.capaciteMax * 100)|round : 0 %}
+							<div style="margin-top:1rem; background:rgba(255,255,255,0.06); border-radius:100px; height:5px; overflow:hidden;">
+								<div style="width:{{ pct }}%; height:100%; background:{% if pct >= 90 %}var(--red){% elseif pct >= 60 %}#fbbf24{% else %}var(--cyan){% endif %}; border-radius:100px;"></div>
+							</div>
+						</div>
+					</div>
+
+					{# Inscription card #}
+					<div class="events-wrapper" style="margin-top:0;">
+						<div style="padding:1.25rem 1.5rem;">
+
+							{% if not app.user %}
+								<p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem; line-height:1.6;">
+									Connectez-vous pour vous inscrire à cet événement.
+								</p>
+								<a href="{{ path('app_login') }}" class="btn-cta" style="display:block; text-align:center; font-size:0.9rem; padding:0.75rem;">
+									Se connecter
+								</a>
+
+							{% elseif event.reservation.contains(app.user) %}
+								<div style="text-align:center; padding:0.5rem 0;">
+									<div style="font-size:1.5rem; margin-bottom:0.5rem;">✅</div>
+									<p style="font-size:0.88rem; color:var(--green); font-weight:600; margin-bottom:0.25rem;">Vous êtes inscrit(e)</p>
+									<p style="font-size:0.78rem; color:var(--muted); font-family:var(--mono);">Rendez-vous le
+										{{ event.dateDebut|date('d/m/Y') }}</p>
+								</div>
+
+							{% elseif event.reservation|length >= event.capaciteMax %}
+								<div style="text-align:center; padding:0.5rem 0;">
+									<div style="font-size:1.5rem; margin-bottom:0.5rem;">🔒</div>
+									<p style="font-size:0.88rem; color:var(--red); font-weight:600; margin-bottom:0.25rem;">Événement complet</p>
+									<p style="font-size:0.78rem; color:var(--muted); font-family:var(--mono);">Plus aucune place disponible</p>
+								</div>
+
+							{% else %}
+								<p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem; line-height:1.6;">
+									Rejoignez cet événement et confirmez votre participation.
+								</p>
+								<form method="post" action="{{ path('app_event_inscription', {id: event.id}) }}">
+									<input type="hidden" name="_token" value="{{ csrf_token('inscription' ~ event.id) }}">
+									<button type="submit" class="btn-cta" style="width:100%; text-align:center; font-size:0.9rem; padding:0.75rem; border:none; cursor:pointer;">
+										S'inscrire à cet événement
+									</button>
+								</form>
+							{% endif %}
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</section>
 
 {% endblock %}

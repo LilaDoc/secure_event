@@ -1,42 +1,106 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index
+{% block title %}Mes événements — SecurEvent
 {% endblock %}
 
 {% block body %}
-	<h1>Mes evenements</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
+	<section class="section" style="padding-top: 3rem;">
+		<div
+			class="container">
 
-				<th>Titre</th>
-				<th>Description</th>
-				<th>DateDebut</th>
-				<th>CapaciteMax</th>
-				<th>Place</th>
+			{# HEADER #}
+			<div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-5">
+				<div>
+					<span class="section-label">Mon espace</span>
+					<h1 class="section-title" style="margin-bottom: 0.5rem;">
+						Mes événements
+					</h1>
+					<p class="section-subtitle" style="margin: 0;">
+						Les événements auxquels vous êtes inscrit(e).
+					</p>
+				</div>
+				<a href="{{ path('app_home') }}" class="btn-cta-outline" style="align-self:center; font-size:0.85rem; padding: 0.6rem 1.4rem;">
+					← Découvrir d'autres événements
+				</a>
+			</div>
 
-			</tr>
-		</thead>
-		<tbody>
-			{% for event in events %}
-				<tr>
-					<td>{{ event.titre }}</td>
-					<td>{{ event.description }}</td>
-					<td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ event.capaciteMax }}</td>
-					<td>{{ event.lieu }}</td>
-					<td>
-						<a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+			{# TABLE CARD #}
+			<div class="events-wrapper">
 
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="8">no records found</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+				{% if events is empty %}
+
+					<div style="text-align:center; padding: 4rem 1rem;">
+						<div style="font-size: 2.5rem; margin-bottom: 1rem;">📭</div>
+						<p style="color: var(--muted); font-family: var(--mono); font-size: 0.85rem; margin-bottom: 1.5rem;">
+							Vous n'êtes inscrit(e) à aucun événement pour le moment.
+						</p>
+						<a href="{{ path('app_home') }}" class="btn-cta" style="font-size:0.88rem; padding: 0.7rem 1.8rem;">
+							Voir les événements disponibles
+						</a>
+					</div>
+
+				{% else %}
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Titre</th>
+								<th class="d-none d-md-table-cell">Description</th>
+								<th>Date</th>
+								<th class="d-none d-sm-table-cell">Lieu</th>
+								<th class="d-none d-sm-table-cell">Capacité</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for event in events %}
+								<tr>
+									<td>
+										<strong style="color: var(--text); font-size: 0.9rem;">
+											{{ event.titre }}
+										</strong>
+									</td>
+									<td class="d-none d-md-table-cell" style="color: var(--muted); max-width: 240px; font-size: 0.85rem;">
+										{{ event.description|length > 70 ? event.description|slice(0, 70) ~ '…' : event.description }}
+									</td>
+									<td style="white-space: nowrap;">
+										<span style="font-family: var(--mono); font-size: 0.78rem; color: var(--muted);">
+											{{ event.dateDebut ? event.dateDebut|date('d/m/Y') : '—' }}
+										</span>
+										{% if event.dateDebut and event.dateDebut > date() %}
+											<br>
+											<span style="font-size: 0.68rem; color: var(--green); font-family: var(--mono);">
+												À venir
+											</span>
+										{% else %}
+											<br>
+											<span style="font-size: 0.68rem; color: var(--muted); font-family: var(--mono);">
+												Passé
+											</span>
+										{% endif %}
+									</td>
+									<td class="d-none d-sm-table-cell" style="color: var(--muted); font-size: 0.85rem;">
+										{{ event.lieu }}
+									</td>
+									<td class="d-none d-sm-table-cell">
+										<span class="event-tag">{{ event.capaciteMax }}
+											places</span>
+									</td>
+									<td>
+										<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn-view">
+											Voir →
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+				{% endif %}
+			</div>
+
+		</div>
+	</section>
 
 {% endblock %}

@@ -1,42 +1,85 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index
+{% block title %}Événements — SecurEvent
 {% endblock %}
 
 {% block body %}
-	<h1>Event index</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Titre</th>
-				<th>Description</th>
-				<th>DateDebut</th>
-				<th>CapaciteMax</th>
-				<th>Place</th>
-				<th>actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for event in events %}
-				<tr>
-					<td>{{ event.id }}</td>
-					<td>{{ event.titre }}</td>
-					<td>{{ event.description }}</td>
-					<td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ event.capaciteMax }}</td>
-					<td>{{ event.lieu }}</td>
-					<td>
-						<a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="7">Aucun événement à venir</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<section class="section" style="padding-top: 3rem;">
+		<div
+			class="container">
+
+			{# HEADER #}
+			<div class="mb-5">
+				<span class="section-label">Catalogue</span>
+				<h1 class="section-title" style="margin-bottom: 0.5rem;">
+					Tous les événements
+				</h1>
+				<p class="section-subtitle">
+					Conférences, CTF et workshops en cybersécurité à venir.
+				</p>
+			</div>
+
+			{# TABLE #}
+			<div class="events-wrapper">
+				<div class="events-header">
+					<h2 style="font-family:var(--display); font-size:1.1rem; font-weight:700; color:var(--text); margin:0;">
+						{{ events|length }}
+						événement{{ events|length > 1 ? 's' : '' }}
+						disponible{{ events|length > 1 ? 's' : '' }}
+					</h2>
+				</div>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Titre</th>
+							<th class="d-none d-md-table-cell">Description</th>
+							<th>Date</th>
+							<th class="d-none d-sm-table-cell">Lieu</th>
+							<th class="d-none d-sm-table-cell">Places</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for event in events %}
+							<tr>
+								<td>
+									<strong style="color:var(--text); font-size:0.9rem;">
+										{{ event.titre }}
+									</strong>
+								</td>
+								<td class="d-none d-md-table-cell" style="color:var(--muted); max-width:240px; font-size:0.85rem;">
+									{{ event.description|length > 70 ? event.description|slice(0,70) ~ '…' : event.description }}
+								</td>
+								<td style="font-family:var(--mono); font-size:0.78rem; color:var(--muted); white-space:nowrap;">
+									{{ event.dateDebut ? event.dateDebut|date('d/m/Y H:i') : '—' }}
+								</td>
+								<td class="d-none d-sm-table-cell" style="color:var(--muted); font-size:0.85rem;">
+									{{ event.lieu }}
+								</td>
+								<td class="d-none d-sm-table-cell">
+									<span class="event-tag">{{ event.capaciteMax }}
+										pl.</span>
+								</td>
+								<td>
+									<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn-view">
+										Voir →
+									</a>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6">
+									<div class="no-events">Aucun événement à venir pour le moment.</div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</section>
 
 {% endblock %}

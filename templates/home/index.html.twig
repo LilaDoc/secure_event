@@ -1,50 +1,192 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - SecurEvent
+{% block title %}Accueil — SecurEvent
 {% endblock %}
 
 {% block body %}
-	<div class="text-center mt-5">
-		<h1>🔐 Bienvenue sur SecurEvent</h1>
-		<p class="lead text-muted mt-3">
-			La plateforme de référence pour les conférences et CTF en cybersécurité.
-		</p>
-	</div>
 
-	<div class="container mt-5">
-		<h2>Événements disponibles</h2>
+	{# ========== HERO ========== #}
+	<section class="hero">
+		<div class="hero-bg"></div>
+		<div class="hero-grid"></div>
+		<div class="container position-relative">
+			<div
+				class="row align-items-center g-5">
 
-		<table class="table table-striped mt-3">
-			<thead>
-				<tr>
-					<th>Titre</th>
-					<th>Description</th>
-					<th>Date de début</th>
-					<th>Capacité max</th>
-					<th>Lieu</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for event in events %}
-					<tr>
-						<td>{{ event.titre }}</td>
-						<td>{{ event.description }}</td>
-						<td>{{ event.dateDebut ? event.dateDebut|date('d/m/Y H:i') : '' }}</td>
-						<td>{{ event.capaciteMax }}</td>
-						<td>{{ event.lieu }}</td>
-						<td>
-							<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-sm btn-primary">
-								Voir
-							</a>
-						</td>
-					</tr>
-				{% else %}
-					<tr>
-						<td colspan="6" class="text-center">Aucun événement disponible pour le moment.</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
+				{# LEFT #}
+				<div class="col-lg-6">
+					<div class="hero-badge">
+						<span class="hero-badge-dot"></span>
+						Plateforme #1 en cybersécurité
+					</div>
+					<h1>
+						Formez-vous aux<br>
+						défis de la
+						<span class="highlight">cyber</span>
+					</h1>
+					<p class="lead">
+						Conférences, CTF et workshops animés par des experts.
+												                    Rejoignez la communauté SecurEvent et montez en compétences.
+					</p>
+					<div class="hero-cta-group">
+						{% if app.user %}
+							<a href="{{ path('app_event_index') }}" class="btn-cta">Voir les événements</a>
+							<a href="{{ path('app_profil_index') }}" class="btn-cta-outline">Mon espace</a>
+						{% else %}
+							<a href="{{ path('app_register') }}" class="btn-cta">Commencer gratuitement</a>
+							<a href="{{ path('app_login') }}" class="btn-cta-outline">Se connecter</a>
+						{% endif %}
+					</div>
+					<div class="hero-stats">
+						<div>
+							<span class="hero-stat-value">500+</span>
+							<span class="hero-stat-label">participants</span>
+						</div>
+						<div>
+							<span class="hero-stat-value">40+</span>
+							<span class="hero-stat-label">événements</span>
+						</div>
+						<div>
+							<span class="hero-stat-value">98%</span>
+							<span class="hero-stat-label">satisfaction</span>
+						</div>
+					</div>
+				</div>
+
+				{# RIGHT — images #}
+				<div class="col-lg-6 d-none d-lg-block">
+					<div class="hero-visual">
+						<div class="hero-floating-badge">
+							<span style="color:var(--muted)">Menaces bloquées</span><br>
+							<span class="val">+12 847</span>
+							cette semaine
+						</div>
+						<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=700&q=80" alt="Cybersécurité" class="hero-img-main">
+						<img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80" alt="Formation cyber" class="hero-img-secondary">
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	{# ========== FEATURES ========== #}
+	<section class="section">
+		<div class="container">
+			<span class="section-label">Pourquoi SecurEvent</span>
+			<h2 class="section-title">Tout ce qu'il vous faut<br>pour progresser</h2>
+			<p class="section-subtitle">
+				Des événements pensés pour les professionnels et passionnés de cybersécurité,
+								            du débutant à l'expert.
+			</p>
+
+			<div class="feature-grid">
+				<div class="feature-card">
+					<div class="feature-icon">🏆</div>
+					<h3>CTF & Challenges</h3>
+					<p>Compétitions de hacking éthique pour tester vos compétences en conditions réelles.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon">🎓</div>
+					<h3>Conférences Expert</h3>
+					<p>Intervenants issus des meilleures entreprises de sécurité et agences gouvernementales.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon">🔬</div>
+					<h3>Workshops Pratiques</h3>
+					<p>Sessions hands-on sur la pentest, le forensic, la cryptographie et bien plus encore.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon">🌐</div>
+					<h3>Réseau Professionnel</h3>
+					<p>Connectez-vous avec des centaines d'experts et accélérez votre carrière en cybersécurité.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# ========== EVENTS TABLE ========== #}
+	<section class="section" style="padding-top:0">
+		<div class="container">
+			<div class="events-wrapper">
+				<div class="events-header">
+					<h2>Événements à venir</h2>
+					{% if app.user %}
+						<a href="{{ path('app_event_index') }}" class="btn-view" style="font-size:0.8rem; padding:0.4rem 1rem;">
+							Voir tout →
+						</a>
+					{% else %}
+						<a href="{{ path('app_register') }}" class="btn-view" style="font-size:0.8rem; padding:0.4rem 1rem;">
+							S'inscrire pour participer →
+						</a>
+					{% endif %}
+				</div>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Titre</th>
+							<th class="d-none d-md-table-cell">Description</th>
+							<th>Date</th>
+							<th class="d-none d-sm-table-cell">Lieu</th>
+							<th class="d-none d-sm-table-cell">Places</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for event in events %}
+							<tr>
+								<td>
+									<strong style="color:var(--text); font-size:0.9rem;">{{ event.titre }}</strong>
+								</td>
+								<td class="d-none d-md-table-cell" style="color:var(--muted); max-width:220px; font-size:0.85rem;">
+									{{ event.description|length > 60 ? event.description|slice(0,60) ~ '…' : event.description }}
+								</td>
+								<td style="font-family:var(--mono); font-size:0.78rem; color:var(--muted); white-space:nowrap;">
+									{{ event.dateDebut ? event.dateDebut|date('d/m/Y') : '—' }}
+								</td>
+								<td class="d-none d-sm-table-cell" style="color:var(--muted); font-size:0.85rem;">
+									{{ event.lieu }}
+								</td>
+								<td class="d-none d-sm-table-cell">
+									<span class="event-tag">{{ event.capaciteMax }}
+										places</span>
+								</td>
+								<td>
+									<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn-view">
+										Voir →
+									</a>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6">
+									<div class="no-events">Aucun événement disponible pour le moment.</div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+
+	{# ========== CTA SECTION ========== #}
+	{% if not app.user %}
+		<div class="container">
+			<div class="cta-block">
+				<h2>Prêt à rejoindre la communauté ?</h2>
+				<p>
+					Créez votre compte gratuitement et inscrivez-vous aux prochains
+										            événements de cybersécurité près de chez vous.
+				</p>
+				<div class="d-flex gap-3 justify-content-center flex-wrap">
+					<a href="{{ path('app_register') }}" class="btn-cta">Créer un compte</a>
+					<a href="{{ path('app_login') }}" class="btn-cta-outline">Se connecter</a>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
 {% endblock %}

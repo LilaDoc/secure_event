@@ -2,42 +2,44 @@
 <html lang="fr">
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>
 			{% block title %}SecurEvent
 			{% endblock %}
 		</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="{{ asset('/css/admin-dashboard.css') }}">
-		<link rel="stylesheet" href="{{ asset('/css/style.css') }}">
+		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Rajdhani:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<nav class="navbar navbar-expand-lg navbar-dark">
 			<div class="container">
-				<a class="navbar-brand" href="{{ path('app_home') }}">🔐 SecurEvent</a>
-				<div class="ms-auto">
+				<a class="navbar-brand" href="{{ path('app_home') }}">
+					🔐 Secur<span class="brand-accent">Event</span>
+				</a>
+				<div class="ms-auto d-flex align-items-center gap-2">
 					{% if app.user %}
-						<span class="text-white me-3">Bonjour,
+						<span class="text-muted d-none d-md-inline" style="font-size:0.78rem; font-family:var(--mono);">
 							{{ app.user.prenom }}
-							!</span>
-						<a href="{{ path('app_logout') }}" class="btn btn-outline-light btn-sm">Déconnexion</a>
-						{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-							<a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-light btn-sm">Dashboard Admin</a>
+						</span>
+						{% if 'ROLE_ADMIN' in app.user.roles %}
+							<a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-light btn-sm">Admin</a>
 						{% endif %}
-						{% if app.user and 'ROLE_USER' in app.user.roles %}
+						{% if 'ROLE_USER' in app.user.roles %}
 							<a href="{{ path('app_profil_index') }}" class="btn btn-outline-light btn-sm">Mon espace</a>
 						{% endif %}
+						<a href="{{ path('app_logout') }}" class="btn btn-outline-light btn-sm">Déconnexion</a>
 					{% else %}
-						<a href="{{ path('app_login') }}" class="btn btn-outline-light btn-sm me-2">Connexion</a>
+						<a href="{{ path('app_login') }}" class="btn btn-outline-light btn-sm">Connexion</a>
 						<a href="{{ path('app_register') }}" class="btn btn-primary btn-sm">S'inscrire</a>
 					{% endif %}
 				</div>
 			</div>
 		</nav>
 
-		<div
-			class="container mt-4">
-			{# Affichage des messages flash #}
+		<div class="container mt-4">
 			{% for type, messages in app.flashes %}
 				{% for message in messages %}
 					<div class="alert alert-{{ type == 'success' ? 'success' : 'danger' }}">
@@ -45,8 +47,9 @@
 					</div>
 				{% endfor %}
 			{% endfor %}
-
-			{% block body %}{% endblock %}
 		</div>
+
+		{% block body %}{% endblock %}
+
 	</body>
 </html>

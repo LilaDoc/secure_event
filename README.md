@@ -18,7 +18,7 @@ Développée avec **Symfony 7 (LTS)**, elle suit les principes de _Security by D
 
 - Se connecter à son espace personnel
 - S'inscrire à un événement (si des places sont disponibles)
-- Consulter ses inscriptions sur `/profile/mes-evenements`
+- Consulter ses inscriptions sur `/profil`
 - Modifier ses informations personnelles
 
 ### Administrateur `ROLE_ADMIN`
@@ -31,14 +31,14 @@ Développée avec **Symfony 7 (LTS)**, elle suit les principes de _Security by D
 
 ## 🛠️ Stack technique
 
-| Technologie     | Version   |
-| --------------- | --------- |
-| PHP             | 8.2+      |
-| Symfony         | 7.x (LTS) |
-| Doctrine ORM    | 3.x       |
-| MySQL / MariaDB | 8.x       |
-| Bootstrap       | 5.3       |
-| Twig            | 3.x       |
+| Technologie         | Version   |
+| ------------------- | --------- |
+| PHP                 | 8.2+      |
+| Symfony             | 7.x (LTS) |
+| Doctrine ORM        | 3.x       |
+| PostgreSQL ou MySQL | 15+ / 8.x |
+| Bootstrap           | 5.3       |
+| Twig                | 3.x       |
 
 ---
 
@@ -46,10 +46,21 @@ Développée avec **Symfony 7 (LTS)**, elle suit les principes de _Security by D
 
 ### Prérequis
 
-- PHP 8.2+
-- Composer
-- MySQL / MariaDB
-- Symfony CLI _(optionnel mais recommandé)_
+Avant de commencer, assurez-vous d'avoir installé :
+
+- **PHP 8.2+** — [https://www.php.net/downloads](https://www.php.net/downloads)
+- **Composer** — [https://getcomposer.org](https://getcomposer.org)
+- **MySQL** (via WAMP/XAMPP/Workbench) **ou PostgreSQL** — selon votre configuration
+- **Symfony CLI** _(optionnel mais recommandé)_ — [https://symfony.com/download](https://symfony.com/download)
+- **Git** — [https://git-scm.com](https://git-scm.com)
+
+Vérifiez vos versions :
+
+```bash
+php -v
+composer -V
+symfony -V  # si Symfony CLI installé
+```
 
 ---
 
@@ -68,27 +79,73 @@ cd secure_event
 composer install
 ```
 
+> ⚠️ Si vous avez une erreur PHP version, vérifiez que PHP 8.2+ est bien utilisé : `php -v`
+
 ---
 
 ### 3. Configurer l'environnement
 
-Copie le fichier d'exemple et édite-le :
+**Sur Mac/Linux :**
 
 ```bash
 cp .env .env.local
 ```
 
-Modifie la ligne `DATABASE_URL` dans `.env.local` :
+**Sur Windows (CMD) :**
 
-```env
-DATABASE_URL="mysql://USER:PASSWORD@127.0.0.1:3306/securvent?serverVersion=8.0"
+```cmd
+copy .env .env.local
 ```
 
-Remplace `USER` et `PASSWORD` par tes identifiants MySQL.
+Ouvrez `.env.local` et modifiez la ligne `DATABASE_URL` selon votre base de données :
+
+**PostgreSQL :**
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@127.0.0.1:5432/securvent?serverVersion=15&charset=utf8"
+```
+
+**MySQL / MariaDB (Workbench, WAMP, XAMPP) :**
+
+```env
+DATABASE_URL="mysql://USER:PASSWORD@127.0.0.1:3306/securvent?serverVersion=8.0&charset=utf8mb4"
+```
+
+Remplacez `USER` et `PASSWORD` par vos identifiants.  
+Par défaut sur WAMP/XAMPP : `USER=root`, `PASSWORD=` _(vide)_.
+
+> ⚠️ **Ne committez jamais `.env.local`** — il contient vos secrets. Vérifiez que `.gitignore` l'exclut bien.
 
 ---
 
-### 4. Créer la base de données
+### 4. Activer l'extension PHP pour la base de données
+
+Ouvrez votre fichier `php.ini` (chemin affiché par `php --ini`) et décommentez la ligne correspondante en retirant le `;` :
+
+**Pour PostgreSQL :**
+
+```ini
+;extension=pdo_pgsql  →  extension=pdo_pgsql
+;extension=pgsql      →  extension=pgsql
+```
+
+**Pour MySQL :**
+
+```ini
+;extension=pdo_mysql  →  extension=pdo_mysql
+```
+
+Redémarrez ensuite votre serveur PHP/WAMP/XAMPP.
+
+Vérifiez que l'extension est active :
+
+```bash
+php -m | grep pdo
+```
+
+---
+
+### 5. Créer la base de données
 
 ```bash
 php bin/console doctrine:database:create
@@ -97,23 +154,33 @@ php bin/console doctrine:migrations:migrate
 
 ---
 
-### 5. Charger les fixtures _(compte admin + données de test)_
+### 6. Charger les fixtures _(comptes de test + événements)_
+
+Installez le bundle si ce n'est pas déjà fait :
 
 ```bash
-composer require --dev doctrine/doctrine-fixtures-bundle
+composer require doctrine/doctrine-fixtures-bundle --dev
+```
+
+Puis chargez les données :
+
+```bash
 php bin/console doctrine:fixtures:load
 ```
 
-Compte administrateur créé par défaut :
+Comptes créés par défaut :
 
-| Champ        | Valeur               |
-| ------------ | -------------------- |
-| Email        | `admin@securvent.fr` |
-| Mot de passe | `Admin1234!`         |
+| Rôle           | Email            | Mot de passe |
+| -------------- | ---------------- | ------------ |
+| Administrateur | `admin@test.com` | `Admin1234!` |
+| Utilisateur    | `user1@test.com` | `User1234!`  |
+| Utilisateur    | `user2@test.com` | `User1234!`  |
+
+Les fixtures chargent également **50 événements** de démonstration (CTF, workshops, conférences, formations).
 
 ---
 
-### 6. Lancer le serveur
+### 7. Lancer le serveur
 
 Avec la Symfony CLI :
 
@@ -139,6 +206,7 @@ L'application est accessible sur [http://localhost:8000](http://localhost:8000)
 - Contrôle d'accès via `#[IsGranted('ROLE_ADMIN')]` sur toutes les routes `/admin`
 - Requêtes **100% via Doctrine ORM** — aucune requête SQL concaténée
 - Auto-échappement Twig actif — protection XSS native
+- `.env.local` exclu du dépôt via `.gitignore`
 
 ---
 
@@ -152,6 +220,21 @@ GET /api/events
 
 Retourne uniquement les événements publiés (`isPublished = true`) avec une date future. Les données sensibles (emails des participants) sont exclues via les groupes de sérialisation Symfony.
 
+**Exemple de réponse :**
+
+```json
+[
+    {
+        "id": 1,
+        "titre": "CTF Web Security Challenge",
+        "description": "Capture The Flag orienté sécurité web...",
+        "dateDebut": "2026-04-01T10:00:00+02:00",
+        "capaciteMax": 50,
+        "lieu": "Salle A — Campus Cyber, Paris"
+    }
+]
+```
+
 ---
 
 ## 📁 Structure du projet
@@ -159,9 +242,15 @@ Retourne uniquement les événements publiés (`isPublished = true`) avec une da
 ```
 src/
 ├── Controller/
-│   ├── Admin/          # Back-office (ROLE_ADMIN)
-│   ├── Front/          # Pages publiques
-│   └── Api/            # Endpoints REST
+│   ├── Admin/              # Back-office (ROLE_ADMIN)
+│   │   ├── DashboardController.php
+│   │   └── EventController.php
+│   ├── Front/              # Pages publiques & espace utilisateur
+│   │   ├── HomeController.php
+│   │   ├── EventController.php
+│   │   └── ProfilController.php
+│   └── Api/                # Endpoints REST
+│       └── EventController.php
 ├── Entity/
 │   ├── User.php
 │   ├── Event.php
@@ -172,14 +261,30 @@ src/
 ├── Repository/
 │   ├── EventRepository.php
 │   └── UserRepository.php
+└── DataFixtures/
+    ├── UserFixtures.php
+    └── EventFixtures.php
 templates/
-├── admin/              # Templates back-office
-├── event/              # Templates événements
-├── security/           # Login / Register
+├── admin/                  # Templates back-office
+│   └── event/
+│       ├── index.html.twig
+│       ├── show.html.twig
+│       ├── new.html.twig
+│       ├── edit.html.twig
+│       └── participants.html.twig
+├── front/
+│   ├── home/
+│   │   └── index.html.twig
+│   └── profil/
+│       └── index.html.twig
+├── security/
+│   ├── login.html.twig
+│   └── register.html.twig
 └── base.html.twig
 public/
 └── css/
-    └── admin-dashboard.css
+    ├── style.css           # Styles globaux (variables, navbar, hero, tables)
+    └── admin-dashboard.css # Styles spécifiques au back-office
 ```
 
 ---
@@ -196,13 +301,16 @@ public/
 
 - La gestion des routes Symfony avec des paramètres dynamiques (`{id}`) a causé des conflits avec les routes nommées (`/event/new` vs `/event/{id}`), résolus en ajoutant `requirements: ['id' => '\d+']`.
 - Le renommage de propriétés dans l'entité (`place` → `lieu`, `nom` → `titre`) en cours de développement a nécessité des migrations et des mises à jour dans tous les templates Twig.
-- La synchronisation Git entre branches a posé quelques problèmes de tracking (`--set-upstream`).
+- La synchronisation Git entre branches a posé quelques problèmes de tracking (`--set-upstream`) et de conflits de merge.
+- L'activation du driver PostgreSQL (`pdo_pgsql`) dans `php.ini` était requise et non documentée initialement.
+- Les variables CSS personnalisées du `style.css` devaient être chargées avant `admin-dashboard.css` pour éviter des conflits de surcharge Bootstrap.
 
 ### Ce qui aurait pu être amélioré
 
 - Mettre en place les entités et les noms de propriétés définitivement dès le début pour éviter les migrations correctives.
 - Créer un template Twig partiel `_sidebar.html.twig` pour éviter la répétition de la sidebar dans chaque template admin.
 - Ajouter des tests unitaires sur le repository et les contraintes de validation.
+- Exclure `.env` du dépôt dès le début du projet.
 
 ### Ce qu'on aurait aimé ajouter
 
@@ -211,6 +319,7 @@ public/
 - Internationalisation FR/EN
 - Filtres par catégorie sur le catalogue d'événements
 - Module de cartographie pour afficher l'itinéraire vers le lieu de l'événement
+- Notifications par email lors d'une inscription à un événement
 
 ---
 
