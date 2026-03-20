@@ -9,10 +9,8 @@
 		<p class="lead text-muted mt-3">
 			La plateforme de référence pour les conférences et CTF en cybersécurité.
 		</p>
-		{% if app.user and 'ROLE_USER' in app.user.roles %}
-			<div class="mt-4">
-				<a href="{{ path('app_event_index') }}" class="btn btn-outline-danger">Accéder aux Events</a>
-			</div>
-		{% endif %}
+		<div class="mt-4">
+			<a href="{{ path('app_event_index') }}" class="btn btn-outline-danger">Accéder aux Events</a>
+		</div>
 	</div>
 {% endblock %}

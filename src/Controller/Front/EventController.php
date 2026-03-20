@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Services\EventReservationManager;
 
 //#[Route('/event')]
 final class EventController extends AbstractController
@@ -30,7 +31,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/event/{id}/inscription', name: 'app_event_inscription', methods: ['POST'])]
-    public function inscription(Event $event, Request $request, EntityManagerInterface $entityManager): Response
+    public function inscription(Event $event, Request $request, EntityManagerInterface $entityManager, EventReservationManager $eventReservationManager): Response
     {
         if (!$this->isCsrfTokenValid('inscription' . $event->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
@@ -38,11 +39,11 @@ final class EventController extends AbstractController
 
         $user = $this->getUser();
 
-        if ($event->getReservation()->contains($user)) {
+        if ($eventReservationManager->isUserAlreadyRegistered($event, $user)) {
             $this->addFlash('warning', 'Vous êtes déjà inscrit à cet événement.');
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         }
-        if ($event->getReservation()->count() >= $event->getCapaciteMax()) {
+        if ($eventReservationManager->isEventFull($event)) {
             $this->addFlash('warning', 'Evenement complet');
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         }

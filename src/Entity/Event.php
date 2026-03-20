@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -15,21 +16,25 @@ class Event
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[Groups(['api_event_read'])]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
+    #[Groups(['api_event_read'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[Groups(['api_event_read'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $dateDebut = null;
+
 
     #[ORM\Column]
     private ?int $capaciteMax = null;
 
     #[ORM\Column]
     private ?bool $isPublished = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $lieu = null;
