@@ -9,8 +9,42 @@
 		<p class="lead text-muted mt-3">
 			La plateforme de référence pour les conférences et CTF en cybersécurité.
 		</p>
-		<div class="mt-4">
-			<a href="{{ path('app_event_index') }}" class="btn btn-outline-danger">Accéder aux Events</a>
-		</div>
+	</div>
+
+	<div class="container mt-5">
+		<h2>Événements disponibles</h2>
+
+		<table class="table table-striped mt-3">
+			<thead>
+				<tr>
+					<th>Titre</th>
+					<th>Description</th>
+					<th>Date de début</th>
+					<th>Capacité max</th>
+					<th>Lieu</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for event in events %}
+					<tr>
+						<td>{{ event.titre }}</td>
+						<td>{{ event.description }}</td>
+						<td>{{ event.dateDebut ? event.dateDebut|date('d/m/Y H:i') : '' }}</td>
+						<td>{{ event.capaciteMax }}</td>
+						<td>{{ event.lieu }}</td>
+						<td>
+							<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-sm btn-primary">
+								Voir
+							</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="6" class="text-center">Aucun événement disponible pour le moment.</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 	</div>
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Event index
+{% endblock %}
+
+{% block body %}
+	<h1>Mes evenements</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+
+				<th>Titre</th>
+				<th>Description</th>
+				<th>DateDebut</th>
+				<th>CapaciteMax</th>
+				<th>Place</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			{% for event in events %}
+				<tr>
+					<td>{{ event.titre }}</td>
+					<td>{{ event.description }}</td>
+					<td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
+					<td>{{ event.capaciteMax }}</td>
+					<td>{{ event.lieu }}</td>
+					<td>
+						<a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="8">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+{% endblock %}
