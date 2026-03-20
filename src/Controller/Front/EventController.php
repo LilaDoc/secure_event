@@ -54,4 +54,5 @@ final class EventController extends AbstractController
         $this->addFlash('success', 'Inscription réussie !');
         return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
     }
+    
 }
