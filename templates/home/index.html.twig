@@ -26,7 +26,7 @@
 					</h1>
 					<p class="lead">
 						Conférences, CTF et workshops animés par des experts.
-												                    Rejoignez la communauté SecurEvent et montez en compétences.
+																		                    Rejoignez la communauté SecurEvent et montez en compétences.
 					</p>
 					<div class="hero-cta-group">
 						{% if app.user %}
@@ -77,7 +77,7 @@
 			<h2 class="section-title">Tout ce qu'il vous faut<br>pour progresser</h2>
 			<p class="section-subtitle">
 				Des événements pensés pour les professionnels et passionnés de cybersécurité,
-								            du débutant à l'expert.
+												            du débutant à l'expert.
 			</p>
 
 			<div class="feature-grid">
@@ -134,7 +134,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for event in events %}
+						{% for event in events|slice(0, 10) %}
 							<tr>
 								<td>
 									<strong style="color:var(--text); font-size:0.9rem;">{{ event.titre }}</strong>
@@ -167,6 +167,18 @@
 						{% endfor %}
 					</tbody>
 				</table>
+
+				{# VOIR PLUS #}
+				{% if events|length > 10 %}
+					<div style="padding:1.25rem 1.75rem; border-top:1px solid rgba(255,255,255,0.06); text-align:center;">
+						<a href="{{ path('app_event_index') }}" class="btn-cta" style="font-size:0.88rem; padding:0.7rem 2rem;">
+							Voir les
+							{{ events|length - 10 }}
+							autres événements →
+						</a>
+					</div>
+				{% endif %}
+
 			</div>
 		</div>
 	</section>
@@ -179,7 +191,7 @@
 				<h2>Prêt à rejoindre la communauté ?</h2>
 				<p>
 					Créez votre compte gratuitement et inscrivez-vous aux prochains
-										            événements de cybersécurité près de chez vous.
+															            événements de cybersécurité près de chez vous.
 				</p>
 				<div class="d-flex gap-3 justify-content-center flex-wrap">
 					<a href="{{ path('app_register') }}" class="btn-cta">Créer un compte</a>
