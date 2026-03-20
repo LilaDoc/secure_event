@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil — SecurEvent
+{% endblock %}
+
+{% block body %}
+
+	<section class="section" style="padding-top: 3rem;">
+		<div
+			class="container">
+
+			{# BACK #}
+			<a href="{{ path('app_profil_index') }}" style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:#64748b; text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-bottom:2rem;">
+				← Retour à mon espace
+			</a>
+
+			{# HEADER #}
+			<div style="margin-bottom: 2rem;">
+				<span class="section-label">Mon compte</span>
+				<h1 class="section-title" style="margin-bottom: 0.25rem;">Modifier mon profil</h1>
+				<p class="section-subtitle">Mettez à jour vos informations personnelles.</p>
+			</div>
+
+			{# FLASH #}
+			{% for msg in app.flashes('success') %}
+				<div class="alert alert-success">{{ msg }}</div>
+			{% endfor %}
+
+			{# FORM CARD #}
+			<div class="events-wrapper" style="max-width: 560px;">
+				<div style="padding: 1.75rem;">
+
+					{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+					<div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+						<div>
+							{{ form_label(form.prenom, null, {'label_attr': {
+                            'style': 'display:block; font-family:\'JetBrains Mono\',monospace; font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; margin-bottom:0.5rem;'
+                        }}) }}
+							{{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+							{{ form_errors(form.prenom) }}
+						</div>
+
+						<div>
+							{{ form_label(form.nom, null, {'label_attr': {
+                            'style': 'display:block; font-family:\'JetBrains Mono\',monospace; font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; margin-bottom:0.5rem;'
+                        }}) }}
+							{{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+							{{ form_errors(form.nom) }}
+						</div>
+
+						<div>
+							{{ form_label(form.email, null, {'label_attr': {
+                            'style': 'display:block; font-family:\'JetBrains Mono\',monospace; font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; color:#64748b; margin-bottom:0.5rem;'
+                        }}) }}
+							{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+							{{ form_errors(form.email) }}
+						</div>
+
+					</div>
+
+					<div style="display:flex; gap:0.75rem; margin-top:2rem; padding-top:1.25rem; border-top:1px solid rgba(255,255,255,0.06);">
+						<button type="submit" class="btn-cta" style="font-size:0.9rem; padding:0.7rem 1.75rem;">
+							Enregistrer
+						</button>
+						<a href="{{ path('app_profil_index') }}" class="btn-cta-outline" style="font-size:0.9rem; padding:0.7rem 1.5rem;">
+							Annuler
+						</a>
+					</div>
+
+					{{ form_end(form) }}
+
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+{% endblock %}
