@@ -304,6 +304,7 @@ public/
 - La synchronisation Git entre branches a posé quelques problèmes de tracking (`--set-upstream`) et de conflits de merge.
 - L'activation du driver PostgreSQL (`pdo_pgsql`) dans `php.ini` était requise et non documentée initialement.
 - Les variables CSS personnalisées du `style.css` devaient être chargées avant `admin-dashboard.css` pour éviter des conflits de surcharge Bootstrap.
+- Un problème de gestion de versions lors d’un push sur la branche dev a entraîné l’écrasement de modifications locales, dû à un manque de synchronisation préalable (absence de pull --rebase) et/ou à une mauvaise gestion des branches.
 
 ### Ce qui aurait pu être amélioré
 
